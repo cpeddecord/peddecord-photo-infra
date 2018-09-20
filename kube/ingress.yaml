@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: aggressive-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.global-static-ip-name: peddecord-photo-static-ip
+spec:
+  tls:
+    - secretName: peddecord-photo-tls
+      hosts:
+        - "*.peddecord.photo"
+        - peddecord-photo
+        - peddecord.photo
+  rules:
+    - host: www.peddecord.photo
+      http:
+        paths:
+          - path: /api
+            backend:
+              serviceName: api-v1-np
+              servicePort: 3000
+          - path: /
+            backend:
+              serviceName: node-app-np
+              servicePort: 3000
+    - host: peddecord.photo
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: node-app-np
+              servicePort: 3000
